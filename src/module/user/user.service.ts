@@ -5,14 +5,15 @@ import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
-    private saltRound: number = 0
+    private saltRound: number = 10
     constructor(private prismaService: PrismaService) {
 
     }
 
     async createUser(createUser: createUserInterfacce): Promise<boolean> {
-        const hash = await bcrypt.hash(createUser.password, this.saltRound);
-        const response =  this.prismaService.user.create({
+        const salt = await bcrypt.genSalt(this.saltRound)
+        const hash = await bcrypt.hash(createUser.password, salt);
+        const response = await this.prismaService.user.create({
             data: {
                 username: createUser.username,
                 email: createUser.email,

@@ -12,7 +12,7 @@ export class UserController {
   ) {
 
   }
-  @Post()
+  @Post('create')
   async create(@Body() createUser: createUserInterfacce): Promise<IBaseSingleResult> {
     try {
       const response = await this.userService.createUser(createUser);
