@@ -10,18 +10,18 @@ export class UserService {
 
     }
 
-    async createUser(createUser: createUserInterfacce): Promise<boolean> {
-        const salt = await bcrypt.genSalt(this.saltRound)
-        const hash = await bcrypt.hash(createUser.password, salt);
-        const response = await this.prismaService.user.create({
-            data: {
-                username: createUser.username,
-                email: createUser.email,
-                password: hash,
-                first_name: createUser.first_name,
-                last_name: createUser.last_name
-            }
-        });
-        return response ? true : false
-    }
+    // async createUser(createUser: createUserInterfacce) {
+    //     const salt = await bcrypt.genSalt(this.saltRound)
+    //     const hash = await bcrypt.hash(createUser.password, salt);
+    //     const response = await this.prismaService.user.create({
+    //         data: {
+    //             username: createUser.username,
+    //             email: createUser.email,
+    //             password: hash,
+    //             first_name: createUser.first_name,
+    //             last_name: createUser.last_name
+    //         }
+    //     });
+    //     return response ? true : false
+    // }
 }

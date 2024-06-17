@@ -26,6 +26,13 @@ export interface IBaseCollectionWithPangingResult {
     message?: string;
     errorMessage?: string;
 }
+
+export interface IBaseResultService {
+    isError: boolean;
+    status : boolean;
+    message?: string
+    data?: any
+}
 export class ILogin {
     username: string | undefined;
     password: string | undefined;

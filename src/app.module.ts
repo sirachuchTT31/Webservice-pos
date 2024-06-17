@@ -9,7 +9,7 @@ import { AuthModule } from './module/auth/auth.module';
     AuthModule,
     UserModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  // controllers: [AppController],
+  // providers: [AppService],
 })
 export class AppModule { }
