@@ -48,13 +48,13 @@ export class AuthService {
                 return this.baseResultCommonService.successSingleResult({
                     status: false,
                     result: {},
-                    message: 'Username or password incorrect'
+                    message: 'Invalid username or password'
                 })
             }
             return this.baseResultCommonService.successSingleResult({
                 status: false,
                 result: {},
-                message: 'Username or password incorrect'
+                message: 'Invalid username or password'
             })
         }
         catch (e) {
