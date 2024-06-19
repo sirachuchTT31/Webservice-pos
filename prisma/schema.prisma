@@ -24,7 +24,6 @@ model User {
   province          String?            @db.VarChar(100)
   zip_code          String?            @db.VarChar(5)
   telephone         String?            @db.VarChar(10)
-  username          String             @db.VarChar(100)
   password          String             @db.VarChar(100)
   first_login       Boolean            @default(false)
   is_active         Boolean            @default(true)
@@ -47,6 +46,7 @@ model UserOnRole {
   created_by Int?
   updated_at DateTime   @default(now()) @updatedAt @db.Timestamp(3)
   updated_by Int?
+
   @@id([user_id, role_id])
 }
 
@@ -77,6 +77,32 @@ model MasterCompany {
   UserOnCompany UserOnCompany[]
 }
 
+model MappingRoleMenu {
+  id         Int        @default(autoincrement())
+  MasterMenu MasterMenu @relation(fields: [menu_id], references: [id])
+  menu_id    Int
+  MasterRole MasterRole @relation(fields: [role_id], references: [id])
+  role_id    Int
+  created_at DateTime   @default(now()) @db.Timestamp(3)
+  created_by Int?
+  updated_at DateTime   @default(now()) @updatedAt @db.Timestamp(3)
+  updated_by Int?
+
+  @@id([id])
+}
+
+model MasterMenu {
+  id              Int               @id @default(autoincrement())
+  name            String            @db.VarChar(50)
+  icon            String            @db.VarChar(255)
+  is_active       Boolean           @default(false)
+  created_at      DateTime          @default(now()) @db.Timestamp(3)
+  created_by      Int?
+  updated_at      DateTime          @default(now()) @updatedAt @db.Timestamp(3)
+  updated_by      Int?
+  MappingRoleMenu MappingRoleMenu[]
+}
+
 model OtpForgotPassword {
   id        Int      @id @default(autoincrement())
   email     String   @db.VarChar(50)
@@ -97,15 +123,16 @@ model TrialPeriodAccout {
 }
 
 model MasterRole {
-  id          Int          @id @default(autoincrement())
-  role_code   String       @db.VarChar(5)
-  name        Role
-  description String       @db.VarChar(50)
-  created_at  DateTime     @default(now()) @db.Timestamp(3)
-  created_by  Int?
-  updated_at  DateTime     @default(now()) @updatedAt @db.Timestamp(3)
-  updated_by  Int?
-  UserOnRole  UserOnRole[]
+  id              Int               @id @default(autoincrement())
+  role_code       String            @db.VarChar(5)
+  name            Role
+  description     String            @db.VarChar(50)
+  created_at      DateTime          @default(now()) @db.Timestamp(3)
+  created_by      Int?
+  updated_at      DateTime          @default(now()) @updatedAt @db.Timestamp(3)
+  updated_by      Int?
+  UserOnRole      UserOnRole[]
+  MappingRoleMenu MappingRoleMenu[]
 }
 
 enum Role {

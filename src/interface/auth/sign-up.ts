@@ -2,8 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 
 
 export class signUpInterface {
-    @ApiProperty()
-    username: string
 
     @ApiProperty()
     email: string

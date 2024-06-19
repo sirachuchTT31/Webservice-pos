@@ -89,9 +89,6 @@ export class AuthService {
                 where: {
                     OR: [
                         {
-                            username: payload.username
-                        },
-                        {
                             email: payload.email
                         }
                     ]
@@ -102,7 +99,6 @@ export class AuthService {
                 const hash = await bcrypt.hash(payload.password, salt);
                 await this.prismaService.user.create({
                     data: {
-                        username: payload.username,
                         password: hash,
                         email: payload.email,
                         first_name: payload.first_name,
