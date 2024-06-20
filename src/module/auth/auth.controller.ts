@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Request, Response } from '@nestjs/common';
 import { BaseResultCommonService } from 'src/utils/base-result-common.service';
 import { IBaseSingleResult } from 'src/interface/base-result/base-result';
 import { AuthService } from './auth.service';
@@ -26,18 +26,19 @@ export class AuthController {
     @Get('google')
     @UseGuards(GoogleOauthGuardGuard)
     async googleSignIn(@Request() req) {
-        console.log(req)
+        console.log('dsadsa', req)
     }
 
     @Get('google/callback')
     @UseGuards(GoogleOauthGuardGuard)
-    async googleAuthRedirect(@Request() req) {
-        console.log(req)
-    //   const { accessToken } = await this.authService.googleLogin(req);
-    //   res.cookie('access_token', accessToken, {
-    //     httpOnly: true,
-    //   });
-    //   res.redirect('/users/profile');
+    async googleAuthRedirect(@Request() req, @Response() res) {
+        // console.log(req)
+        //   const { accessToken } = await this.authService.googleLogin(req);
+        //   res.cookie('access_token', accessToken, {
+        //     httpOnly: true,
+        //   });
+        //เหลือ Set payload ลง storage
+        res.redirect(process.env.CLIENT_BASE);
     }
 
     @Post('refresh')
