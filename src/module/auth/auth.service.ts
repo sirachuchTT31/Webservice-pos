@@ -17,6 +17,7 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) { }
 
+    //Flow normal user
     async signIn(payload: signInInterface): Promise<IBaseSingleResult> {
         try {
             const findUser = await this.prismaService.user.findFirst({
@@ -121,4 +122,68 @@ export class AuthService {
             return this.baseResultCommonService.internalServerError(e.message)
         }
     }
+
+    async googleSignIn(req): Promise<IBaseSingleResult> {
+        try {
+            // console.log(req.user)
+            const payload = req.user
+            console.log(payload)
+            const findUser = await this.prismaService.user.findFirst({
+                where: {
+                    email: payload.email
+                }
+            });
+            if (_.isEmpty(findUser)) {
+                const fullName = payload.name.split(' ')
+                const createUser = await this.prismaService.user.create({
+                    data: {
+                        email: payload.email,
+                        first_name: fullName[0],
+                        last_name: fullName[1],
+                    }
+                });
+                const payloadJWT = {
+                    email: createUser.email,
+                    first_name: createUser.first_name,
+                    last_name: createUser.last_name,
+                }
+                const accessToken = this.jwtService.sign(payloadJWT, { algorithm: 'HS256', expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
+                const refreshToken = this.jwtService.sign(payloadJWT, { algorithm: 'HS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION, secret: process.env.REFRESH_TOKEN_SECRET })
+                const expiresIn = this.jwtService.decode(accessToken);
+                return this.baseResultCommonService.successSingleResult({
+                    status: true,
+                    result: {
+                        access_token: accessToken,
+                        refresh_token: refreshToken,
+                        exp: expiresIn.exp
+                    },
+                    message: 'Sign in successfully'
+                })
+            }
+            const payloadJWT = {
+                email: findUser.email,
+                first_name: findUser.first_name,
+                last_name: findUser.last_name,
+            }
+            const accessToken = this.jwtService.sign(payloadJWT, { algorithm: 'HS256', expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
+            const refreshToken = this.jwtService.sign(payloadJWT, { algorithm: 'HS256', expiresIn: process.env.REFRESH_TOKEN_EXPIRATION, secret: process.env.REFRESH_TOKEN_SECRET })
+            const expiresIn = this.jwtService.decode(accessToken);
+            return this.baseResultCommonService.successSingleResult({
+                status: true,
+                result: {
+                    access_token: accessToken,
+                    refresh_token: refreshToken,
+                    exp: expiresIn.exp
+                },
+                message: 'Sign in successfully'
+            })
+
+        }
+        catch (e) {
+            console.log(e)
+            return this.baseResultCommonService.internalServerError(e.message)
+        }
+    }
+
+
 }

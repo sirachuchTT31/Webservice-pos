@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Post, UseGuards, Request, Response } from '@nestjs/common';
+import { EncryptService } from './../../common/encrypt/encrypt.service';
+import { Body, Controller, Get, Post, UseGuards, Request, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { BaseResultCommonService } from 'src/utils/base-result-common.service';
 import { IBaseSingleResult } from 'src/interface/base-result/base-result';
 import { AuthService } from './auth.service';
@@ -14,7 +16,8 @@ export class AuthController {
 
     constructor(
         private readonly BaseResultCommonService: BaseResultCommonService,
-        private authService: AuthService) {
+        private authService: AuthService,
+        private encryptService: EncryptService) {
 
     }
 
@@ -31,14 +34,19 @@ export class AuthController {
 
     @Get('google/callback')
     @UseGuards(GoogleOauthGuardGuard)
-    async googleAuthRedirect(@Request() req, @Response() res) {
-        // console.log(req)
-        //   const { accessToken } = await this.authService.googleLogin(req);
-        //   res.cookie('access_token', accessToken, {
-        //     httpOnly: true,
-        //   });
-        //เหลือ Set payload ลง storage
-        res.redirect(process.env.CLIENT_BASE);
+    async googleAuthRedirect(@Request() req, @Res() res: Response) {
+        // const response = await this.authService.googleSignIn(req)
+        // const formatJSON = JSON.stringify(response)
+        // const ciplerResponse = this.encryptService.encrypt(formatJSON)
+        // res.cookie(
+        //     'credentialsGoogle', ciplerResponse,
+        //     {
+        //         httpOnly : false,
+        //         secure: true,
+        //         sameSite: 'strict',
+        //         path: '/'
+        //     })
+        // res.redirect(process.env.CLIENT_BASE);
     }
 
     @Post('refresh')
